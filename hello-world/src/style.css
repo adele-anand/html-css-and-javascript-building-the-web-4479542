@@ -1,0 +1,90 @@
+.warning {
+  color: red;
+}
+
+body{
+  background-color: cadetblue;
+  text-align: center;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+header{
+  display: flex;
+  padding: 1em;
+  display: flex;
+  text-indent: 1em;
+  justify-content: space-between;
+  background-color: antiquewhite;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16pt;
+}
+
+nav p {
+  margin: 0.5em;
+  line-height: 1.1;
+}
+
+li a, li a:visited{
+  display: block;
+  text-align: left;
+  text-decoration: none;
+  padding: 0.7em;
+  color: black;
+}
+
+nav li {
+  float: left;
+  list-style-type: none;
+}
+
+#current-time {
+  margin-top: 0.3em;
+  font-size: 16pt;
+  text-align: right;
+  line-height: 8pt;
+}
+
+#timer-display{
+  width: 50%;
+  margin-left: 20%;
+  padding: 5%;
+  border-radius: 25px;
+  background-color: antiquewhite;
+}
+
+.clockface{
+  font-size: 50pt;
+  justify-content: space-between;
+  width: 80%;
+  margin: 10%;
+  display: flex;
+}
+
+button{
+  padding: 1em 2em;
+  margin: 0 4em 0 4em ;
+  font-size: 16pt;
+  background-color: antiquewhite;
+  border: none;
+  border-radius: 10px;
+}
+
+.start-button:hover{
+  background-color:rgb(99, 187, 158);
+  cursor: pointer;
+}
+.pause-button:hover{
+  background-color:rgb(245, 189, 85);
+  cursor: pointer;
+}
+.stop-button:hover{
+  background-color:rgb(231, 99, 99);
+  cursor: pointer;
+}

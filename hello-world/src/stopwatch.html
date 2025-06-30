@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="./style.css" />
+<header>
+  <title>Clock App</title>
+  <h1>Clock App</h1>
+  <nav>
+    <ul>
+      <li><a href="">Timer</a></li>
+      <li><a href="">Stopwatch</a></li>
+      <li><a href="">Alarm</a></li>
+    </ul>
+  </nav>
+  <div id="current-time">
+    <p id="display-date">Monday, January 1, 2000</p>
+    <p id="display-time">00:00 PM</p>
+  </div>
+</header>
+
+<body onload="setInterval(updateCurrentTime, 1000)">
+  <h1>Stopwatch</h1>
+  <p>Start the clock!</p>
+  <div id="timer-display">
+    <div class="clockface">
+      <h2 id="hours" contenteditable="true">00</h2>
+      <h2>:</h2>
+      <h2 id="minutes" contenteditable="true">00</h2>
+      <h2>:</h2>
+      <h2 id="seconds" contenteditable="true">00</h2>
+    </div>
+    <button class="start-button" onclick="callStopWatch()">▶</button>
+    <button class="pause-button" onclick="clearInterval(window.tick)">| |</button>
+    <button class="stop-button" onclick="clearInterval(window.tick); clearTimer()">⏹</button>
+  </div>
+  <script src="./stopwatch.js"></script>
+</body>
+
+</html>
