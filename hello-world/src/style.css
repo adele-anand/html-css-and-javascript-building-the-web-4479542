@@ -1,13 +1,37 @@
-.warning {
-  color: red;
+.root {
+  --bg_color: cadetblue;
+  --text_color: black;
+  --secondary_color: rgb(234, 250, 215);
+}
+
+.theme1 {
+  --bg_color: rgb(222, 153, 163);
+  --text_color: white;
+  --secondary_color: rgb(100, 27, 60);
+}
+
+.theme2 {
+  --bg_color: rgb(215, 142, 81);
+  --text_color: white;
+  --secondary_color: rgb(100, 60, 27);
+}
+
+.theme3 {
+  --bg_color: rgb(71, 70, 152);
+  --text_color: black;
+  --secondary_color: rgb(149, 128, 232)
 }
 
 body{
-  background-color: cadetblue;
+  background-color:var(--bg_color);
   text-align: center;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0px;
   padding: 0px;
+  color: var(--text_color);
+  font-size: 16pt;
+  width: 100%;
+  line-height: 1.2;
 }
 
 header{
@@ -16,7 +40,7 @@ header{
   display: flex;
   text-indent: 1em;
   justify-content: space-between;
-  background-color: antiquewhite;
+  background-color:var(--secondary_color);
 }
 
 nav {
@@ -36,7 +60,7 @@ li a, li a:visited{
   text-align: left;
   text-decoration: none;
   padding: 0.7em;
-  color: black;
+  color: var(--text_color);
 }
 
 nav li {
@@ -55,15 +79,24 @@ nav li {
   width: 50%;
   margin-left: 20%;
   padding: 5%;
+  padding-bottom: 10%;
   border-radius: 25px;
-  background-color: antiquewhite;
+  background-color: var(--secondary_color);
+  position: relative;
 }
 
 .clockface{
   font-size: 50pt;
-  justify-content: space-between;
-  width: 80%;
-  margin: 10%;
+  justify-content:center;
+  width: 100%;
+  display: flex;
+  position: static;
+  align-items: center;
+  text-align: center;
+}
+
+.milliseconds {
+  margin-top: 0.4em;
   display: flex;
 }
 
@@ -71,20 +104,30 @@ button{
   padding: 1em 2em;
   margin: 0 4em 0 4em ;
   font-size: 16pt;
-  background-color: antiquewhite;
+  background-color: var(--secondary_color);
   border: none;
   border-radius: 10px;
+  color: var(--text_color);
+}
+
+button:hover{
+  cursor: pointer;
 }
 
 .start-button:hover{
   background-color:rgb(99, 187, 158);
-  cursor: pointer;
 }
 .pause-button:hover{
   background-color:rgb(245, 189, 85);
-  cursor: pointer;
 }
 .stop-button:hover{
   background-color:rgb(231, 99, 99);
-  cursor: pointer;
+}
+
+#theme-button {
+  position: fixed;
+  bottom: 0.5em;
+  right: 0.5em;
+  margin: 0;
+  font-size: 12pt;
 }

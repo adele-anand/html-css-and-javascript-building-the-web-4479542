@@ -31,7 +31,7 @@ function countdownTimer(): void {
   const clockDiv = document.getElementsByClassName('clockface');
   if (hours > 0 || minutes > 0 || seconds > 10) {
     for (let i = 0; i < clockDiv.length; i++) {
-      (clockDiv[i] as HTMLElement).style.color = 'black';
+      (clockDiv[i] as HTMLElement).style.color = getComputedStyle(document.documentElement).getPropertyValue('--text_color');
     }
   }
 
@@ -85,7 +85,7 @@ function clearTimer(): void{
 
   const clockDiv = document.getElementsByClassName('clockface');
   for (let i = 0; i < clockDiv.length; i++) {
-    (clockDiv[i] as HTMLElement).style.color = 'black';
+    (clockDiv[i] as HTMLElement).style.color = getComputedStyle(document.documentElement).getPropertyValue('--text_color');
   }
   
   hoursElement.contentEditable = 'true';
@@ -99,6 +99,14 @@ function updateCurrentTime(): void{
     {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
   document.getElementById('display-time')!.textContent = now.toLocaleString('en-US', 
     {hour: '2-digit', minute: '2-digit', hour12: true});
+}
+
+function changeTheme(): void {
+  const body = document.body;
+  const themes = ['root', 'theme1', 'theme2', 'theme3'];
+  let currentThemeIndex = themes.indexOf(body.className);
+  body.classList.remove(themes[currentThemeIndex]);
+  body.classList.add(themes[(currentThemeIndex + 1) % themes.length]);
 }
 
 export{};

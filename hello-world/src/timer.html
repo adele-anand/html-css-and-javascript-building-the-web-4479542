@@ -16,7 +16,7 @@
       <p id="display-time">00:00 PM</p>
     </div>
   </header>
-  <body onload="setInterval(updateCurrentTime, 1000)">
+  <body onload="setInterval(updateCurrentTime, 1000); changeTheme()">
     <h1>Timer</h1>
     <p>Set the length and start the countdown!</p>
     <div id="timer-display">
@@ -31,6 +31,7 @@
       <button class="pause-button" onclick="clearInterval(window.tick)">| |</button>
       <button class="stop-button" onclick="clearInterval(window.tick); clearTimer()">⏹</button>
     </div>
+    <button id="theme-button" onclick="changeTheme()">Change Theme</button>
     <script src="./timer.js"></script>
   </body>
 </html>

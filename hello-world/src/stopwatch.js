@@ -1,29 +1,60 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function updateCurrentTime() {
-    var now = new Date();
+    const now = new Date();
     document.getElementById('display-date').textContent = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     document.getElementById('display-time').textContent = now.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 }
 function callStopWatch() {
     if (window.tick)
         clearInterval(window.tick);
-    window.tick = setInterval(measureStopWatch, 1000);
+    window.tick = setInterval(measureStopWatch, 10);
 }
 function measureStopWatch() {
-    var hoursElement = document.getElementById('hours');
-    var minutesElement = document.getElementById('minutes');
-    var secondsElement = document.getElementById('seconds');
-    var hours = parseInt(hoursElement.textContent || '0', 10);
-    var minutes = parseInt(minutesElement.textContent || '0', 10);
-    var seconds = parseInt(secondsElement.textContent || '0', 10);
-    seconds++;
-    if (seconds >= 60) {
-        seconds = 0;
-        minutes++;
-        if (minutes < 59) {
-            minutes = 0;
-            hours++;
+    const hoursElement = document.getElementById('hours');
+    const minutesElement = document.getElementById('minutes');
+    const secondsElement = document.getElementById('seconds');
+    const millisecondsElement = document.getElementById('milliseconds');
+    let hours = parseInt(hoursElement.textContent || '0', 10);
+    let minutes = parseInt(minutesElement.textContent || '0', 10);
+    let seconds = parseInt(secondsElement.textContent || '0', 10);
+    let milliseconds = parseInt(millisecondsElement.textContent || '0', 10);
+    milliseconds++;
+    if (milliseconds >= 100) {
+        milliseconds = 0;
+        seconds++;
+        if (seconds >= 60) {
+            seconds = 0;
+            minutes++;
+            if (minutes >= 60) {
+                minutes = 0;
+                hours++;
+            }
         }
     }
+    hoursElement.textContent = pad2(hours);
+    minutesElement.textContent = pad2(minutes);
+    secondsElement.textContent = pad2(seconds);
+    millisecondsElement.textContent = pad2(milliseconds);
 }
+function pad2(num) {
+    return num < 10 ? '0' + num : num.toString();
+}
+function clearTimer() {
+    const hoursElement = document.getElementById('hours');
+    const minutesElement = document.getElementById('minutes');
+    const secondsElement = document.getElementById('seconds');
+    const millisecondsElement = document.getElementById('milliseconds');
+    hoursElement.textContent = '00';
+    minutesElement.textContent = '00';
+    secondsElement.textContent = '00';
+    millisecondsElement.textContent = '00';
+}
+function changeTheme() {
+    const body = document.body;
+    const themes = ['root', 'theme1', 'theme2', 'theme3'];
+    let currentThemeIndex = themes.indexOf(body.className);
+    body.classList.remove(themes[currentThemeIndex]);
+    body.classList.add(themes[(currentThemeIndex + 1) % themes.length]);
+}
+//# sourceMappingURL=stopwatch.js.map

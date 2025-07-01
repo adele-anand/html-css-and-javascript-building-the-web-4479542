@@ -6,7 +6,7 @@
   <h1>Clock App</h1>
   <nav>
     <ul>
-      <li><a href="">Timer</a></li>
+      <li><a href="timer.html">Timer</a></li>
       <li><a href="">Stopwatch</a></li>
       <li><a href="">Alarm</a></li>
     </ul>
@@ -16,22 +16,26 @@
     <p id="display-time">00:00 PM</p>
   </div>
 </header>
-
-<body onload="setInterval(updateCurrentTime, 1000)">
+<body onload="setInterval(updateCurrentTime, 1000); changeTheme()">
   <h1>Stopwatch</h1>
   <p>Start the clock!</p>
   <div id="timer-display">
     <div class="clockface">
-      <h2 id="hours" contenteditable="true">00</h2>
+      <h2 id="hours">00</h2>
       <h2>:</h2>
-      <h2 id="minutes" contenteditable="true">00</h2>
+      <h2 id="minutes">00</h2>
       <h2>:</h2>
-      <h2 id="seconds" contenteditable="true">00</h2>
+      <h2 id="seconds">00</h2>
+      <div class="milliseconds">
+        <h4>.</h4>
+        <h4 id="milliseconds">00</h4>
+      </div>
     </div>
     <button class="start-button" onclick="callStopWatch()">▶</button>
     <button class="pause-button" onclick="clearInterval(window.tick)">| |</button>
     <button class="stop-button" onclick="clearInterval(window.tick); clearTimer()">⏹</button>
   </div>
+  <button id="theme-button" onclick="changeTheme()">Change Theme</button>
   <script src="./stopwatch.js"></script>
 </body>
 
