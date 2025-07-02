@@ -32,8 +32,8 @@
       </div>
     </div>
     <button class="start-button" onclick="callStopWatch()">▶</button>
-    <button class="pause-button" onclick="clearInterval(window.tick)">| |</button>
-    <button class="stop-button" onclick="clearInterval(window.tick); clearTimer()">⏹</button>
+    <button class="pause-button" onclick="clearInterval(window.tick); window.tick = undefined">| |</button>
+    <button class="stop-button" onclick="stopStopWatch()">⏹</button>
   </div>
   <button id="theme-button" onclick="changeTheme()">Change Theme</button>
   <script src="./stopwatch.js"></script>

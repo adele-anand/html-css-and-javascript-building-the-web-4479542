@@ -1,8 +1,8 @@
-declare global {
-  interface Window {
-    tick?: number;
-  }
+interface Window {
+  tick?: number;
 }
+
+let shouldClearOnStart = false;
 
 function updateCurrentTime(): void{
   const now = new Date();
@@ -13,7 +13,14 @@ function updateCurrentTime(): void{
 }
 
 function callStopWatch(): void {
-  if (window.tick) clearInterval(window.tick);
+  if (window.tick) {
+    clearInterval(window.tick);
+    window.tick = undefined;
+  }
+  if (shouldClearOnStart) {
+    clearTimer();
+    shouldClearOnStart = false;
+  }
   window.tick = setInterval(measureStopWatch, 10);
 }
 
@@ -64,6 +71,14 @@ function clearTimer(): void{
   millisecondsElement.textContent = '00';
 }
 
+function stopStopWatch(): void {
+  if (window.tick) {
+    clearInterval(window.tick);
+    window.tick = undefined;
+  }
+  shouldClearOnStart = true;
+}
+
 function changeTheme(): void {
   const body = document.body;
   const themes = ['root', 'theme1', 'theme2', 'theme3'];
@@ -71,5 +86,3 @@ function changeTheme(): void {
   body.classList.remove(themes[currentThemeIndex]);
   body.classList.add(themes[(currentThemeIndex + 1) % themes.length]);
 }
-
-export{};

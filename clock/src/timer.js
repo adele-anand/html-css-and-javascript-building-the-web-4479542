@@ -90,4 +90,3 @@ function changeTheme() {
     body.classList.remove(themes[currentThemeIndex]);
     body.classList.add(themes[(currentThemeIndex + 1) % themes.length]);
 }
-//# sourceMappingURL=timer.js.map

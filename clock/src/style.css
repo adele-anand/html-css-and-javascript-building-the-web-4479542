@@ -22,6 +22,10 @@
   --secondary_color: rgb(149, 128, 232)
 }
 
+*{
+  outline: none;
+}
+
 body{
   background-color:var(--bg_color);
   text-align: center;
