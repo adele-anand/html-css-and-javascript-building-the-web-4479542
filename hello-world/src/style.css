@@ -85,7 +85,17 @@ nav li {
   position: relative;
 }
 
-.clockface{
+#alarm-display {
+  width: 25%;
+  margin-left: 10%;
+  padding: 5%;
+  padding-bottom: 10%;
+  border-radius: 25px;
+  background-color: var(--secondary_color);
+  position: relative;
+}
+
+.clockface {
   font-size: 50pt;
   justify-content:center;
   width: 100%;
@@ -93,6 +103,20 @@ nav li {
   position: static;
   align-items: center;
   text-align: center;
+}
+
+.alarmclock{
+  display: flex;
+  font-size: 30pt;
+}
+
+select {
+  background-color: var(--secondary_color);
+  border: none;
+  font-size: 40pt;
+  font-weight: bold;
+  margin-top: 10px;
+  height: min-content;
 }
 
 .milliseconds {
@@ -130,4 +154,13 @@ button:hover{
   right: 0.5em;
   margin: 0;
   font-size: 12pt;
+}
+
+.days button{
+  border-radius: 100%;
+  padding: 0;
+  width: 2em;
+  height: 2em;
+  background-color: var(--text_color);
+  color: var(--secondary_color);
 }

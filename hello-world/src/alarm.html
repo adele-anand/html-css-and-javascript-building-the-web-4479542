@@ -17,26 +17,32 @@
   </div>
 </header>
 <body onload="setInterval(updateCurrentTime, 1000); changeTheme()">
-  <h1>Stopwatch</h1>
-  <p>Start the clock!</p>
-  <div id="timer-display">
-    <div class="clockface">
+  <h1>Alarms</h1>
+  <p>Next alarm in:</p>
+  <div id="alarm-display">
+    <div class="alarmclock">
       <h2 id="hours">00</h2>
       <h2>:</h2>
       <h2 id="minutes">00</h2>
-      <h2>:</h2>
-      <h2 id="seconds">00</h2>
-      <div class="milliseconds">
-        <h4>.</h4>
-        <h4 id="milliseconds">00</h4>
-      </div>
+      <select name="12hr" id="12hr">
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
     </div>
-    <button class="start-button" onclick="callStopWatch()">▶</button>
-    <button class="pause-button" onclick="clearInterval(window.tick)">| |</button>
-    <button class="stop-button" onclick="clearInterval(window.tick); clearTimer()">⏹</button>
+      <input id="repeat" type="checkbox">
+      <label for="repeat">Repeats</label>
+      <div class="days">
+        <button>M</button>
+        <button>T</button>
+        <button>W</button>
+        <button>T</button>
+        <button>F</button>
+        <button>S</button>
+        <button>S</button>
+      </div>
+      <input type="date" id="date">
+      <button>Add Alarm</button>
   </div>
   <button id="theme-button" onclick="changeTheme()">Change Theme</button>
   <script src="./stopwatch.js"></script>
 </body>
-
-</html>
