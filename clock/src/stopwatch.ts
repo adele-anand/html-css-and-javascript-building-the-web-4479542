@@ -9,7 +9,7 @@ function updateCurrentTime(): void{
   document.getElementById('display-date')!.textContent = now.toLocaleString('en-US', 
     {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
   document.getElementById('display-time')!.textContent = now.toLocaleString('en-US', 
-    {hour: '2-digit', minute: '2-digit', hour12: true});
+    {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true});
 }
 
 function callStopWatch(): void {

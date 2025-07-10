@@ -12,37 +12,44 @@
     </ul>
   </nav>
   <div id="current-time">
-    <h2 id="display-time">00:00 PM</h2>
+    <h2 id="display-time">00:00:00 PM</h2>
     <p id="display-date">Monday, January 1, 2000</p>
   </div>
 </header>
-<body onload="setInterval(updateCurrentTime, 1000); changeTheme()">
+<body onload="setInterval(updatecurrentTime, 1000); changetheme(); dayClicked(); reset()">
   <h1>Alarms</h1>
   <p>Next alarm in:</p>
-  <div id="alarm-display">
-    <div class="alarmclock">
-      <h2 id="hours">00</h2>
-      <h2>:</h2>
-      <h2 id="minutes">00</h2>
-      <select name="12hr" id="12hr">
-        <option value="AM">AM</option>
-        <option value="PM">PM</option>
-      </select>
-    </div>
-      <input id="repeat" type="checkbox">
-      <label for="repeat">Repeats</label>
-      <div class="days">
-        <button>M</button>
-        <button>T</button>
-        <button>W</button>
-        <button>T</button>
-        <button>F</button>
-        <button>S</button>
-        <button>S</button>
+  <div class="side-by-side" id="side-by-side">
+    <div id="alarm-display">
+      <div class="alarmclock">
+        <span id="hour" contenteditable="true">6</span>
+        <span>:</span>
+        <span id="minute" contenteditable="true">00</span>
+        <select class="ampm" id="ampm">
+          <option>AM</option>
+          <option>PM</option>
+        </select>
+      </div>
+      <div>
+        <input id="alarm-name" type="text" maxlength="20" placeholder="Alarm Name (optional)">
+      </div>
+      <div class="checkbox">
+        <input id="repeat" type="checkbox" onclick="repeatAlarm()">
+        <label for="repeat">Repeats</label>
+      </div>
+      <div class="days" width="" id="days">
+        <button id="Mon">M</button>
+        <button id="Tue">T</button>
+        <button id="Wed">W</button>
+        <button id="Thu">T</button>
+        <button id="Fri">F</button>
+        <button id="Sat">S</button>
+        <button id="Sun">S</button>
       </div>
       <input type="date" id="date">
-      <button>Add Alarm</button>
+      <button id="add-button" onclick="addAlarm()">Add Alarm</button>
+    </div>
   </div>
-  <button id="theme-button" onclick="changeTheme()">Change Theme</button>
-  <script src="./stopwatch.js"></script>
+  <button id="theme-button" onclick="changetheme()">Change Theme</button>
+  <script src="./alarms.js"></script>
 </body>

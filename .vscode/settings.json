@@ -17,11 +17,12 @@
   "files.autoSave": "afterDelay",
   "screencastMode.onlyKeyboardShortcuts": true,
   "terminal.integrated.fontSize": 18,
-  "workbench.colorTheme": "Visual Studio Dark",
+  "workbench.colorTheme": "Default Dark Modern",
   "workbench.fontAliasing": "antialiased",
   "workbench.statusBar.visible": true,
   "liveServer.settings.root": "./",
   "prettier.enable": true,
   "eslint.alwaysShowStatus": false,
-  "liveServer.settings.donotVerifyTags": true
+  "liveServer.settings.donotVerifyTags": true,
+  "liveServer.settings.port": 5501
 }

@@ -27,19 +27,6 @@ function countdownTimer() {
             clockDiv[i].style.color = getComputedStyle(document.documentElement).getPropertyValue('--text_color');
         }
     }
-    if (hours === 0 && minutes === 0 && seconds === 0) {
-        clearTimer();
-        if (window.tick) {
-            clearInterval(window.tick);
-            window.tick = undefined;
-        }
-        return;
-    }
-    else {
-        hoursElement.contentEditable = 'false';
-        minutesElement.contentEditable = 'false';
-        secondsElement.contentEditable = 'false';
-    }
     seconds--;
     if (seconds < 0) {
         seconds = 59;
@@ -53,6 +40,21 @@ function countdownTimer() {
                 seconds = 0;
             }
         }
+    }
+    if (hours === 0 && minutes === 0 && seconds === 0) {
+        const audio = new Audio("./clock-alarm-8761.mp3");
+        audio.play();
+        clearTimer();
+        if (window.tick) {
+            clearInterval(window.tick);
+            window.tick = undefined;
+        }
+        return;
+    }
+    else {
+        hoursElement.contentEditable = 'false';
+        minutesElement.contentEditable = 'false';
+        secondsElement.contentEditable = 'false';
     }
     hoursElement.textContent = pad2(hours);
     minutesElement.textContent = pad2(minutes);

@@ -1,25 +1,29 @@
 .root {
   --bg_color: cadetblue;
   --text_color: black;
-  --secondary_color: rgb(234, 250, 215);
+  --secondary_color: rgb(214, 231, 193);
+  --highlight_color: rgba(23, 39, 4, 0.2);
 }
 
 .theme1 {
   --bg_color: rgb(222, 153, 163);
   --text_color: white;
   --secondary_color: rgb(100, 27, 60);
+  --highlight_color: rgba(216, 120, 163, 0.2);
 }
 
 .theme2 {
-  --bg_color: rgb(215, 142, 81);
-  --text_color: white;
-  --secondary_color: rgb(100, 60, 27);
+  --bg_color: rgb(72, 72, 150);
+  --text_color: black;
+  --secondary_color: rgb(171, 154, 237);
+  --highlight_color: rgba(26, 8, 96, 0.2);
 }
 
 .theme3 {
-  --bg_color: rgb(71, 70, 152);
-  --text_color: black;
-  --secondary_color: rgb(149, 128, 232)
+  --bg_color: rgb(215, 142, 81);
+  --text_color: white;
+  --secondary_color: rgb(100, 60, 27);
+  --highlight_color: rgba(210, 147, 94, 0.2);
 }
 
 *{
@@ -91,12 +95,20 @@ nav li {
 
 #alarm-display {
   width: 25%;
+  height: 22em;
   margin-left: 10%;
   padding: 5%;
-  padding-bottom: 10%;
   border-radius: 25px;
   background-color: var(--secondary_color);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2em;
+}
+
+.side-by-side{
+  display: flex;
 }
 
 .clockface {
@@ -111,7 +123,10 @@ nav li {
 
 .alarmclock{
   display: flex;
-  font-size: 30pt;
+  font-size: 40pt;
+  font-weight: bold;
+  align-items: baseline;
+  justify-content: center;
 }
 
 select {
@@ -119,8 +134,9 @@ select {
   border: none;
   font-size: 40pt;
   font-weight: bold;
-  margin-top: 10px;
   height: min-content;
+  margin-left: 0.2em;
+  color: var(--text_color)
 }
 
 .milliseconds {
@@ -160,11 +176,96 @@ button:hover{
   font-size: 12pt;
 }
 
+#alarm-name, #date{
+  width: 100%;
+  font-size: 14pt;
+  padding: 8pt;
+  border: 3px solid var(--bg_color);
+  border-radius: 10px;
+}
+
+#alarm-display button{
+  background-color: white;
+  color: black;
+}
+
+#date{
+  margin-bottom: 0.7em;
+  display: block;
+}
+
 .days button{
   border-radius: 100%;
   padding: 0;
   width: 2em;
   height: 2em;
-  background-color: var(--text_color);
-  color: var(--secondary_color);
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  max-width: 2.5em;
+}
+
+.days {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0em;
+  width: 100%;
+  margin: 0;
+  padding: 0.5em 0 0.5em 0;
+  box-sizing: border-box;
+}
+
+.checkbox {
+  display: flex;
+  gap: 0.5em;
+}
+
+.checkbox input{
+  width: 1.5em;
+  margin: 0;
+}
+
+.checkbox input:checked {
+  accent-color: var(--bg_color);
+}
+
+#list_alarms{
+  overflow-y: scroll;
+  max-height: 27.5em;
+  width: 30%;
+  margin-left: 10%;
+  padding: 2%;
+  border-radius: 25px;
+  background-color: var(--secondary_color);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.newAlarm{
+  background-color: var(--highlight_color);
+  padding-left: 1em;
+  padding-right: 1em;
+  border-radius: 10px;
+}
+
+.newAlarm div{
+  display:flex;
+  gap: 1em;
+  align-items: baseline;
+}
+
+.newAlarm h2{
+  margin: 10pt 0 4pt 0;
+}
+
+.newAlarm p{
+  margin: 0 0 10pt 0;
+}
+
+.newAlarm button{
+  background-color: rgba(0, 0, 0, 0);
+  padding:0%;
+  margin:0;
 }
