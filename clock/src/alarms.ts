@@ -5,12 +5,13 @@ interface Alarm {
   hours: number;
   minutes: number;
   ampm: string;
+  timeLeft: Array<number>;
 }
 
 let selectedDays: Array<number> = [0,0,0,0,0,0,0]
 const daysButtons: Array<string> = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
 let alarms_list: Array<Alarm> = []
-const themes = ['root', 'theme1', 'theme2', 'theme3'];
+const themes = ['root', 'theme1', 'theme2', 'theme3', 'theme4', 'theme5'];
 let isEditing:Boolean = false;
 
 const body = document.body;
@@ -19,6 +20,7 @@ const dateInput = document.getElementById("date") as HTMLInputElement;
 const hourElem = document.getElementById('hour') as HTMLSpanElement;
 const minuteElem = document.getElementById('minute') as HTMLSpanElement;
 const ampmElem = document.getElementById('ampm') as HTMLInputElement;
+const nextDisplay = document.getElementById('countdown') as HTMLElement;
 let editingAlarm = document.getElementById("alarm0") as HTMLElement;
 
 const monButton = document.getElementById("Mon")
@@ -39,6 +41,10 @@ function updatecurrentTime(): Date{
     {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
   document.getElementById('display-time')!.textContent = now.toLocaleString('en-US', 
     {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true});
+
+  let nextAlarm: Array<number> = timeUntilNext(alarms_list[0]);
+  nextDisplay.textContent = "Next alarm in "+
+    nextAlarm[0].toString()+" days, "+nextAlarm[1].toString()+" hours and "+nextAlarm[2].toString()+" minutes"
   return now
 }
 
@@ -50,9 +56,11 @@ function changetheme(): void {
 
 function addAlarm(): void {
   if (isEditing == true){
-    deleteAlarm(editingAlarm);
+    const id = parseInt(editingAlarm.id.replace(/\D/g, ''));
+    alarms_list.splice(id, 1); // Remove the old alarm from the array
+    isEditing = false;
   }
-  isEditing = false;
+
   let alarm_name: string = nameInput.value;
 
   let alarm_days: Array<string> = getDays();
@@ -60,6 +68,7 @@ function addAlarm(): void {
   if (alarm_days.length > 0){
     alarm_date = getNextDay(alarm_days)
   }
+  alarm_date.setHours(0, 0, 0, 0);
 
   let alarm_hours: number = parseInt(hourElem.innerHTML);
   let alarm_minutes: number = parseInt(minuteElem.innerHTML);
@@ -71,10 +80,18 @@ function addAlarm(): void {
     date: alarm_date,
     hours: alarm_hours,
     minutes: alarm_minutes,
-    ampm: alarm_ampm
+    ampm: alarm_ampm,
+    timeLeft: []
   }
-  alarms_list.push(alarm);
-  displayAlarms();
+  let alarm_timeLeft: Array<number> = timeUntilNext(alarm);
+  alarm.timeLeft = alarm_timeLeft;
+  
+  if(alarm_timeLeft[0]==0 && alarm_timeLeft[1]==0 && alarm_timeLeft[2]==0){
+    alert("Alarm time cannot be in the past.")
+  }else{
+    alarms_list.push(alarm);
+    displayAlarms();
+  }
   reset();
 }
 
@@ -92,27 +109,25 @@ function getDays(): Array<string>{
 }
 
 function getNextDay(dayNames: Array<string>): Date {
-  let minDiff: number = 8
+  let minDiff: number = 8;
   let date: Date = new Date();
-  let now: number = date.getDay();
+  let now: number = date.getDay(); // 0 (Sun) - 6 (Sat)
+  let todayIndex = (now + 6) % 7;
 
-  for(let dayName of dayNames){
-    // The index for the day you want
+  for (let dayName of dayNames) {
     let day = daysButtons.indexOf(dayName);
-
-    // Find the difference between the current day and the one you want
-    // If it's the same day as today (or a negative number), jump to the next week
-    let diff = day - now;
-    diff = diff < 1 ? 7 + diff : diff;
-    if (diff < minDiff){
-      minDiff = diff
+    let diff = day - todayIndex;
+    diff = diff < 0 ? 7 + diff : diff;
+    if (diff < minDiff) {
+      minDiff = diff;
     }
   }
-    // Get the timestamp for the desired day
-    let nextDayTimestamp: Date = new Date(date.getTime() + (1000 * 60 * 60 * 30 * minDiff));
-    alert(nextDayTimestamp);
-    return nextDayTimestamp;
-};
+
+  let nextDay = new Date(date);
+  nextDay.setDate(date.getDate() + minDiff);
+  nextDay.setHours(0, 0, 0, 0)
+  return nextDay;
+}
 
 function dayClicked(): void {
   monButton?.addEventListener("click", clicked);
@@ -226,6 +241,33 @@ function sortAlarms():void{
     || a.hours - b.hours || a.minutes - b.minutes);
 }
 
+function timeUntilNext(nextAlarm: Alarm): Array<number> {
+  // Clone the alarm date and set the correct time
+  let alarmDate = new Date(nextAlarm.date);
+  let hour = nextAlarm.hours % 12 + (nextAlarm.ampm === "PM" ? 12 : 0);
+  alarmDate.setHours(hour, nextAlarm.minutes, 0, 0);
+
+  let now = new Date();
+  let diffMs = alarmDate.getTime() - now.getTime();
+
+  // If the alarm is repeating and the time has passed, move to next occurrence
+  if (diffMs < 0 && nextAlarm.days.length > 0) {
+    alarmDate.setDate(alarmDate.getDate() + 7);
+    diffMs = alarmDate.getTime() - now.getTime();
+  }
+
+  let days = Math.floor(diffMs / (24 * 60 * 60 * 1000));
+  let hours = Math.floor((diffMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+  let minutes = Math.floor((diffMs % (60 * 60 * 1000)) / (60 * 1000));
+
+  // Prevent negative values
+  days = Math.max(0, days);
+  hours = Math.max(0, hours);
+  minutes = Math.max(0, minutes);
+
+  return [days, hours, minutes];
+}
+
 function editAlarm(this: HTMLButtonElement): void {
   isEditing = true;
   let id: number = parseInt(this.id.replace(/\D/g,''));
@@ -233,7 +275,7 @@ function editAlarm(this: HTMLButtonElement): void {
   for (const div of alarmDivs){
     div.style.outline = "none"
   }
-  const editingAlarm = document.getElementById("alarm"+id.toString()) as HTMLElement;
+  editingAlarm = document.getElementById("alarm"+id.toString()) as HTMLElement;
   if (themes.indexOf(body.className) % 2 == 0){
     editingAlarm.style.outline = "black solid 4px"
   }else{
@@ -259,7 +301,18 @@ function editAlarm(this: HTMLButtonElement): void {
     repeatAlarm();
   }
   else{
-    dateInput.value = alarms_list[id].date.toString();
+  let date: Date = alarms_list[id].date
+  const year = date.getFullYear();
+  let month: number | string = date.getMonth() + 1;
+  let day: number | string = date.getDate();
+
+  if (month < 10) {
+      month = '0' + month;
+  }
+  if (day < 10) {
+      day = '0' + day;
+  }
+  dateInput.value = `${year}-${month}-${day}`;
   }
 }
 
@@ -276,17 +329,19 @@ function deleteAlarm(alarmToDelete: HTMLElement): void{
 }
 
 function reset(): void{
-  hourElem.textContent = "6"
-  minuteElem.textContent = "00"
+  hourElem.textContent = "6";
+  minuteElem.textContent = "00";
+  ampmElem.value = "AM";
 
-  nameInput.value = ""
+  nameInput.value = "";
   checkbox.checked = false;
-  repeatAlarm()
+  repeatAlarm();
 
   let today = new Date();
   const year = today.getFullYear();
   let month: number | string = today.getMonth() + 1;
   let day: number | string = today.getDate();
+  let tomorrow: number | string = day +1;
 
   if (month < 10) {
       month = '0' + month;
@@ -294,12 +349,12 @@ function reset(): void{
   if (day < 10) {
       day = '0' + day;
   }
-  dateInput.value = `${year}-${month}-${day}`;
+  dateInput.value = `${year}-${month}-${tomorrow}`;
   dateInput.min = `${year}-${month}-${day}`;
 
-  selectedDays = [0,0,0,0,0,0,0]
+  selectedDays = [0,0,0,0,0,0,0];
   for(let i=0;i<7;i++){
-    highlightDay(i)
+    highlightDay(i);
   }
 }
 

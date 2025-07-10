@@ -19,11 +19,25 @@
   --highlight_color: rgba(26, 8, 96, 0.2);
 }
 
-.theme3 {
+.theme3{
   --bg_color: rgb(215, 142, 81);
   --text_color: white;
   --secondary_color: rgb(100, 60, 27);
   --highlight_color: rgba(210, 147, 94, 0.2);
+}
+
+.theme4 {
+  --bg_color: rgb(145, 144, 144);
+  --text_color: black;
+  --secondary_color: rgb(251, 251, 249);
+  --highlight_color: rgba(12, 12, 12, 0.2);
+}
+
+.theme5 {
+  --bg_color: rgb(58, 58, 58);
+  --text_color: white;
+  --secondary_color: rgb(37, 37, 37);
+  --highlight_color: rgba(133, 132, 132, 0.2);
 }
 
 *{
@@ -227,6 +241,11 @@ button:hover{
 
 .checkbox input:checked {
   accent-color: var(--bg_color);
+}
+
+#alarm-display button{
+  background-color: var(--bg_color);
+  color: var(--text_color);
 }
 
 #list_alarms{
