@@ -1,6 +1,7 @@
 declare global {
   interface Window {
     tick?: number;
+    audio?: HTMLAudioElement;
   }
 }
 
@@ -51,9 +52,16 @@ function countdownTimer(): void {
   }
 
   if (hours === 0 && minutes === 0 && seconds === 0) {
-    const audio = new Audio("./clock-alarm-8761.mp3")
-    audio.play();
+    window.audio = new Audio("./clock-alarm-8761.mp3")
+    window.audio.play();
+    window.audio.loop = true;
     clearTimer();
+
+    const timerDisplay = document.getElementById("timer-display") as HTMLElement;
+    const timeUp = document.getElementById("timeUp") as HTMLElement;
+    timerDisplay.style.display = "none";
+    timeUp.style.display = "block";
+
     if (window.tick) {
       clearInterval(window.tick);
       window.tick = undefined;
@@ -112,4 +120,15 @@ function changeTheme(): void {
   body.classList.add(themes[(currentThemeIndex + 1) % themes.length]);
 }
 
+function stopRing(){
+  if (window.audio) {
+    window.audio.pause()
+    window.audio.loop = false;
+    window.audio.src = "";
+  }
+  const timerDisplay = document.getElementById("timer-display") as HTMLElement;
+  const timeUp = document.getElementById("timeUp") as HTMLElement;
+  timerDisplay.style.display = "block";
+  timeUp.style.display = "none";
+}
 export{};

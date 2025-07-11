@@ -42,9 +42,14 @@ function countdownTimer() {
         }
     }
     if (hours === 0 && minutes === 0 && seconds === 0) {
-        const audio = new Audio("./clock-alarm-8761.mp3");
-        audio.play();
+        window.audio = new Audio("./clock-alarm-8761.mp3");
+        window.audio.play();
+        window.audio.loop = true;
         clearTimer();
+        const timerDisplay = document.getElementById("timer-display");
+        const timeUp = document.getElementById("timeUp");
+        timerDisplay.style.display = "none";
+        timeUp.style.display = "block";
         if (window.tick) {
             clearInterval(window.tick);
             window.tick = undefined;
@@ -91,4 +96,15 @@ function changeTheme() {
     let currentThemeIndex = themes.indexOf(body.className);
     body.classList.remove(themes[currentThemeIndex]);
     body.classList.add(themes[(currentThemeIndex + 1) % themes.length]);
+}
+function stopRing() {
+    if (window.audio) {
+        window.audio.pause();
+        window.audio.loop = false;
+        window.audio.src = "";
+    }
+    const timerDisplay = document.getElementById("timer-display");
+    const timeUp = document.getElementById("timeUp");
+    timerDisplay.style.display = "block";
+    timeUp.style.display = "none";
 }

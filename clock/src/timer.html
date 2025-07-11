@@ -31,6 +31,10 @@
       <button class="pause-button" onclick="clearInterval(window.tick)">| |</button>
       <button class="stop-button" onclick="clearInterval(window.tick); clearTimer()">⏹</button>
     </div>
+    <div id="timeUp">
+      <h2>Time's Up!</h2>
+      <button class="stop" onclick="stopRing()">OK</button>
+    </div>
     <button id="theme-button" onclick="changeTheme()">Change Theme</button>
     <script src="./timer.js"></script>
   </body>

@@ -97,14 +97,21 @@ nav li {
   line-height: 8pt;
 }
 
-#timer-display{
+#timer-display, #timeUp{
   width: 50%;
   margin-left: 20%;
+  height: 20rem;
   padding: 5%;
   padding-bottom: 10%;
   border-radius: 25px;
   background-color: var(--secondary_color);
   position: relative;
+}
+
+#timeUp{
+  font-size: 40pt;
+  height: 20rem;
+  display: none;
 }
 
 #alarm-display {
@@ -180,6 +187,14 @@ button:hover{
 }
 .stop-button:hover{
   background-color:rgb(231, 99, 99);
+}
+
+.stop{
+  background-color: var(--highlight_color);
+}
+
+.stop:hover{
+  background-color: var(--bg_color);
 }
 
 #theme-button {

@@ -21,6 +21,8 @@ const hourElem = document.getElementById('hour') as HTMLSpanElement;
 const minuteElem = document.getElementById('minute') as HTMLSpanElement;
 const ampmElem = document.getElementById('ampm') as HTMLInputElement;
 const nextDisplay = document.getElementById('countdown') as HTMLElement;
+const parentElem = document.getElementById("side-by-side") as HTMLElement;
+const ringDisplay = document.getElementById("timeUp") as HTMLElement;
 let editingAlarm = document.getElementById("alarm0") as HTMLElement;
 
 const monButton = document.getElementById("Mon")
@@ -33,7 +35,8 @@ const sunButton = document.getElementById("Sun")
 
 const checkbox = document.getElementById("repeat") as HTMLInputElement;
 const daysDisplay = document.getElementById("days") as HTMLElement;
-const audio = new Audio("./clock-alarm-8761.mp3")
+let audio = new Audio("./clock-alarm-8761.mp3")
+// let alarmTriggered: Boolean = false;
 
 function updatecurrentTime(): Date{
   const now = new Date();
@@ -45,7 +48,10 @@ function updatecurrentTime(): Date{
   let nextAlarm: Array<number> = timeUntilNext(alarms_list[0]);
   nextDisplay.textContent = "Next alarm in "+
     nextAlarm[0].toString()+" days, "+nextAlarm[1].toString()+" hours and "+nextAlarm[2].toString()+" minutes"
-  return now
+    if(nextAlarm[0]==0 && nextAlarm[1]==0 && nextAlarm[2]==0){
+      alarmRing();
+    }
+    return now
 }
 
 function changetheme(): void {
@@ -57,7 +63,7 @@ function changetheme(): void {
 function addAlarm(): void {
   if (isEditing == true){
     const id = parseInt(editingAlarm.id.replace(/\D/g, ''));
-    alarms_list.splice(id, 1); // Remove the old alarm from the array
+    alarms_list.splice(id, 1); 
     isEditing = false;
   }
 
@@ -86,7 +92,7 @@ function addAlarm(): void {
   let alarm_timeLeft: Array<number> = timeUntilNext(alarm);
   alarm.timeLeft = alarm_timeLeft;
   
-  if(alarm_timeLeft[0]==0 && alarm_timeLeft[1]==0 && alarm_timeLeft[2]==0){
+  if(alarm_timeLeft[0]<=0 && alarm_timeLeft[1]<=0 && alarm_timeLeft[2]<=0){
     alert("Alarm time cannot be in the past.")
   }else{
     alarms_list.push(alarm);
@@ -122,7 +128,6 @@ function getNextDay(dayNames: Array<string>): Date {
       minDiff = diff;
     }
   }
-
   let nextDay = new Date(date);
   nextDay.setDate(date.getDate() + minDiff);
   nextDay.setHours(0, 0, 0, 0)
@@ -170,7 +175,6 @@ function displayAlarms(): void {
   }
   sortAlarms()
 
-  const parentElem = document.getElementById("side-by-side") as HTMLElement
   const list_alarms: HTMLElement = document.createElement("div")
   list_alarms.id = "list_alarms"
   parentElem.append(list_alarms)
@@ -222,7 +226,7 @@ function displayAlarms(): void {
     editButton.textContent = "🖉"
     editButton.title = "Edit"
     editButton.id = "edit"+i.toString()
-    editButton?.addEventListener('click', editAlarm);
+    editButton?.addEventListener('click', clickEdit);
     newAlarmButtons.appendChild(editButton)
 
     const deleteButton: HTMLButtonElement = document.createElement("button")
@@ -245,7 +249,7 @@ function timeUntilNext(nextAlarm: Alarm): Array<number> {
   // Clone the alarm date and set the correct time
   let alarmDate = new Date(nextAlarm.date);
   let hour = nextAlarm.hours % 12 + (nextAlarm.ampm === "PM" ? 12 : 0);
-  alarmDate.setHours(hour, nextAlarm.minutes, 0, 0);
+  alarmDate.setHours(hour, nextAlarm.minutes+1, 0, 0);
 
   let now = new Date();
   let diffMs = alarmDate.getTime() - now.getTime();
@@ -260,17 +264,16 @@ function timeUntilNext(nextAlarm: Alarm): Array<number> {
   let hours = Math.floor((diffMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
   let minutes = Math.floor((diffMs % (60 * 60 * 1000)) / (60 * 1000));
 
-  // Prevent negative values
-  days = Math.max(0, days);
-  hours = Math.max(0, hours);
-  minutes = Math.max(0, minutes);
-
   return [days, hours, minutes];
 }
 
-function editAlarm(this: HTMLButtonElement): void {
+function clickEdit(this: HTMLButtonElement): void{
+  let num: number = parseInt(this.id.replace(/\D/g,''));
+  editAlarm(num)
+}
+
+function editAlarm(id: number): void {
   isEditing = true;
-  let id: number = parseInt(this.id.replace(/\D/g,''));
   const alarmDivs = document.getElementsByClassName("newAlarm") as HTMLCollectionOf<HTMLElement>;
   for (const div of alarmDivs){
     div.style.outline = "none"
@@ -286,6 +289,8 @@ function editAlarm(this: HTMLButtonElement): void {
   hourElem.textContent = alarms_list[id].hours.toString();
   let min = alarms_list[id].minutes;
   minuteElem.textContent =(min < 10 ? '0' + min: min.toString())
+
+  ampmElem.value = alarms_list[id].ampm;
 
   if (alarms_list[id].days.length > 0){
     checkbox.checked = true
@@ -368,4 +373,25 @@ function repeatAlarm(): Boolean {
     dateInput.style.display = "block";
   }
   return checkbox.checked;
+}
+
+function alarmRing(): void{
+  audio.loop = true;
+  audio.play();
+  parentElem.style.display = "none";
+  ringDisplay.style.display = "block";
+}
+
+function stopRing(): void{
+  parentElem.style.display = "flex";
+  ringDisplay.style.display = "none";
+  audio.pause();
+  audio.currentTime = 0;
+  if(alarms_list[0].days.length == 0){
+    alarms_list.splice(0, 1)
+    displayAlarms();
+  }else{
+    editAlarm(0);
+    addAlarm();
+  }
 }

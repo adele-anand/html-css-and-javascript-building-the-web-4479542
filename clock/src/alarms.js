@@ -11,6 +11,8 @@ const hourElem = document.getElementById('hour');
 const minuteElem = document.getElementById('minute');
 const ampmElem = document.getElementById('ampm');
 const nextDisplay = document.getElementById('countdown');
+const parentElem = document.getElementById("side-by-side");
+const ringDisplay = document.getElementById("timeUp");
 let editingAlarm = document.getElementById("alarm0");
 const monButton = document.getElementById("Mon");
 const tueButton = document.getElementById("Tue");
@@ -21,7 +23,7 @@ const satButton = document.getElementById("Sat");
 const sunButton = document.getElementById("Sun");
 const checkbox = document.getElementById("repeat");
 const daysDisplay = document.getElementById("days");
-const audio = new Audio("./clock-alarm-8761.mp3");
+let audio = new Audio("./clock-alarm-8761.mp3");
 function updatecurrentTime() {
     const now = new Date();
     document.getElementById('display-date').textContent = now.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -29,6 +31,9 @@ function updatecurrentTime() {
     let nextAlarm = timeUntilNext(alarms_list[0]);
     nextDisplay.textContent = "Next alarm in " +
         nextAlarm[0].toString() + " days, " + nextAlarm[1].toString() + " hours and " + nextAlarm[2].toString() + " minutes";
+    if (nextAlarm[0] == 0 && nextAlarm[1] == 0 && nextAlarm[2] == 0) {
+        alarmRing();
+    }
     return now;
 }
 function changetheme() {
@@ -63,7 +68,7 @@ function addAlarm() {
     };
     let alarm_timeLeft = timeUntilNext(alarm);
     alarm.timeLeft = alarm_timeLeft;
-    if (alarm_timeLeft[0] == 0 && alarm_timeLeft[1] == 0 && alarm_timeLeft[2] == 0) {
+    if (alarm_timeLeft[0] <= 0 && alarm_timeLeft[1] <= 0 && alarm_timeLeft[2] <= 0) {
         alert("Alarm time cannot be in the past.");
     }
     else {
@@ -100,7 +105,6 @@ function getNextDay(dayNames) {
     let nextDay = new Date(date);
     nextDay.setDate(date.getDate() + minDiff);
     nextDay.setHours(0, 0, 0, 0);
-    alert(nextDay);
     return nextDay;
 }
 function dayClicked() {
@@ -137,7 +141,6 @@ function displayAlarms() {
         existing_list.remove();
     }
     sortAlarms();
-    const parentElem = document.getElementById("side-by-side");
     const list_alarms = document.createElement("div");
     list_alarms.id = "list_alarms";
     parentElem.append(list_alarms);
@@ -183,7 +186,7 @@ function displayAlarms() {
         editButton.textContent = "🖉";
         editButton.title = "Edit";
         editButton.id = "edit" + i.toString();
-        editButton === null || editButton === void 0 ? void 0 : editButton.addEventListener('click', editAlarm);
+        editButton === null || editButton === void 0 ? void 0 : editButton.addEventListener('click', clickEdit);
         newAlarmButtons.appendChild(editButton);
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "🗑";
@@ -201,7 +204,7 @@ function sortAlarms() {
 function timeUntilNext(nextAlarm) {
     let alarmDate = new Date(nextAlarm.date);
     let hour = nextAlarm.hours % 12 + (nextAlarm.ampm === "PM" ? 12 : 0);
-    alarmDate.setHours(hour, nextAlarm.minutes, 0, 0);
+    alarmDate.setHours(hour, nextAlarm.minutes + 1, 0, 0);
     let now = new Date();
     let diffMs = alarmDate.getTime() - now.getTime();
     if (diffMs < 0 && nextAlarm.days.length > 0) {
@@ -211,14 +214,14 @@ function timeUntilNext(nextAlarm) {
     let days = Math.floor(diffMs / (24 * 60 * 60 * 1000));
     let hours = Math.floor((diffMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
     let minutes = Math.floor((diffMs % (60 * 60 * 1000)) / (60 * 1000));
-    days = Math.max(0, days);
-    hours = Math.max(0, hours);
-    minutes = Math.max(0, minutes);
     return [days, hours, minutes];
 }
-function editAlarm() {
+function clickEdit() {
+    let num = parseInt(this.id.replace(/\D/g, ''));
+    editAlarm(num);
+}
+function editAlarm(id) {
     isEditing = true;
-    let id = parseInt(this.id.replace(/\D/g, ''));
     const alarmDivs = document.getElementsByClassName("newAlarm");
     for (const div of alarmDivs) {
         div.style.outline = "none";
@@ -234,6 +237,7 @@ function editAlarm() {
     hourElem.textContent = alarms_list[id].hours.toString();
     let min = alarms_list[id].minutes;
     minuteElem.textContent = (min < 10 ? '0' + min : min.toString());
+    ampmElem.value = alarms_list[id].ampm;
     if (alarms_list[id].days.length > 0) {
         checkbox.checked = true;
         selectedDays = [0, 0, 0, 0, 0, 0, 0];
@@ -306,4 +310,24 @@ function repeatAlarm() {
         dateInput.style.display = "block";
     }
     return checkbox.checked;
+}
+function alarmRing() {
+    audio.loop = true;
+    audio.play();
+    parentElem.style.display = "none";
+    ringDisplay.style.display = "block";
+}
+function stopRing() {
+    parentElem.style.display = "flex";
+    ringDisplay.style.display = "none";
+    audio.pause();
+    audio.currentTime = 0;
+    if (alarms_list[0].days.length == 0) {
+        alarms_list.splice(0, 1);
+        displayAlarms();
+    }
+    else {
+        editAlarm(0);
+        addAlarm();
+    }
 }
