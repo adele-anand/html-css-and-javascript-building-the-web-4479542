@@ -49,14 +49,10 @@ function addAlarm() {
     }
     let alarm_name = nameInput.value;
     let alarm_days = getDays();
-    let alarm_date = new Date(dateInput.value);
-    if (alarm_days.length > 0) {
-        alarm_date = getNextDay(alarm_days);
-    }
-    alarm_date.setHours(0, 0, 0, 0);
     let alarm_hours = parseInt(hourElem.innerHTML);
     let alarm_minutes = parseInt(minuteElem.innerHTML);
     let alarm_ampm = ampmElem.value;
+    let alarm_date = new Date(dateInput.value);
     let alarm = {
         name: alarm_name,
         days: alarm_days,
@@ -66,6 +62,10 @@ function addAlarm() {
         ampm: alarm_ampm,
         timeLeft: []
     };
+    if (alarm_days.length > 0) {
+        alarm.date = getNextDay(alarm);
+    }
+    alarm.date.setHours(0, 0, 0, 0);
     let alarm_timeLeft = timeUntilNext(alarm);
     alarm.timeLeft = alarm_timeLeft;
     if (alarm_timeLeft[0] <= 0 && alarm_timeLeft[1] <= 0 && alarm_timeLeft[2] <= 0) {
@@ -73,6 +73,7 @@ function addAlarm() {
     }
     else {
         alarms_list.push(alarm);
+        localStorage.setItem('stored_alarms', JSON.stringify(alarms_list));
         displayAlarms();
     }
     reset();
@@ -89,15 +90,30 @@ function getDays() {
     }
     return alarmDays;
 }
-function getNextDay(dayNames) {
+function getNextDay(alarm) {
     let minDiff = 8;
     let date = new Date();
     let now = date.getDay();
     let todayIndex = (now + 6) % 7;
+    let dayNames = alarm.days;
+    let hours = alarm.hours;
+    if (alarm.ampm == "PM" && hours != 12) {
+        hours += 12;
+    }
+    else if (alarm.ampm == "AM" && hours == 12) {
+        hours = 0;
+    }
+    let nowHours = date.getHours();
+    let nowMins = date.getMinutes();
     for (let dayName of dayNames) {
         let day = daysButtons.indexOf(dayName);
         let diff = day - todayIndex;
         diff = diff < 0 ? 7 + diff : diff;
+        if (diff == 0) {
+            if (hours <= nowHours && alarm.minutes <= nowMins) {
+                diff += 7;
+            }
+        }
         if (diff < minDiff) {
             minDiff = diff;
         }
@@ -140,6 +156,7 @@ function displayAlarms() {
     if (existing_list) {
         existing_list.remove();
     }
+    alarms_list = JSON.parse(localStorage.getItem('stored_alarms') || '[]');
     sortAlarms();
     const list_alarms = document.createElement("div");
     list_alarms.id = "list_alarms";
@@ -198,8 +215,8 @@ function displayAlarms() {
     }
 }
 function sortAlarms() {
-    alarms_list.sort((a, b) => a.date.getTime() - b.date.getTime() || a.ampm.localeCompare(b.ampm)
-        || a.hours - b.hours || a.minutes - b.minutes);
+    alarms_list.sort((a, b) => a.timeLeft[0] - b.timeLeft[0] || a.timeLeft[1] - b.timeLeft[1]
+        || a.timeLeft[2] - b.timeLeft[2]);
 }
 function timeUntilNext(nextAlarm) {
     let alarmDate = new Date(nextAlarm.date);
@@ -273,6 +290,7 @@ function clickDelete() {
 function deleteAlarm(alarmToDelete) {
     let id = parseInt(alarmToDelete.id.replace(/\D/g, ''));
     alarms_list.splice(id, 1);
+    localStorage.setItem('stored_alarms', JSON.stringify(alarms_list));
     displayAlarms();
 }
 function reset() {
@@ -324,6 +342,7 @@ function stopRing() {
     audio.currentTime = 0;
     if (alarms_list[0].days.length == 0) {
         alarms_list.splice(0, 1);
+        localStorage.setItem('stored_alarms', JSON.stringify(alarms_list));
         displayAlarms();
     }
     else {
